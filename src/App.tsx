@@ -24,6 +24,28 @@ export default function App() {
     setIsLoaded(true);
   }, []);
 
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: '대전내동교회 초청장',
+          text: '새로운 생명으로의 초대 - 대전내동교회 집회에 여러분을 초대합니다.',
+          url: window.location.href,
+        });
+      } catch (error) {
+        console.error('Error sharing:', error);
+      }
+    } else {
+      // Fallback: Copy to clipboard
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        alert('링크가 클립보드에 복사되었습니다.');
+      } catch (err) {
+        console.error('Failed to copy: ', err);
+      }
+    }
+  };
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -74,7 +96,7 @@ export default function App() {
                   transition={{ delay: 0.5 }}
                   className="bg-white/90 text-[#87af4b] px-3 py-1 rounded-full text-[10px] font-bold tracking-[0.2em] uppercase w-fit mb-4"
                 >
-                  Invitation
+                  초대
                 </motion.span>
                 <motion.h1 
                   initial={{ opacity: 0, y: 20 }}
@@ -110,18 +132,18 @@ export default function App() {
             {[
               {
                 icon: <Leaf className="text-[#87af4b]" size={24} />,
-                title: "거듭나야 합니다",
-                content: "우리의 삶은 육신의 태어남으로 시작되지만, 하나님의 나라를 경험하기 위해서는 영적인 다시 태어남, 즉 '거듭남'이 필요합니다. 이것은 종교적 행위가 아닌 생명의 변화입니다."
+                title: "🌿 거듭나야 합니다",
+                content: "하나님 나라는 한 번 태어난 육신의 생명만으로는 결코 들어갈 수 없는 나라입니다. 오직 물과 성령으로 거듭난 사람만이 그 나라를 보고 누릴 수 있습니다."
               },
               {
                 icon: <Gift className="text-[#87af4b]" size={24} />,
-                title: "거듭남은 선물입니다",
-                content: "하나님은 우리를 사랑하셔서 독생자 예수 그리스도를 보내주셨습니다. 그분을 믿고 받아들일 때, 우리는 죄에서 벗어나 새로운 생명을 선물로 받게 됩니다."
+                title: "🌿 거듭남은 선물입니다",
+                content: "거듭남은 우리의 노력이나 수고로 얻어지는 결과가 아닙니다. 우리가 이 땅에 태어날 때 스스로 노력하지 않았던 것처럼, 거듭남 또한 하나님의 전적인 은혜로 이루어집니다. 마치 씨앗이 땅에 심겨 생명이 탄생하듯, 하나님의 말씀이 우리 마음에 심겨 성령의 역사로 새로운 생명이 시작되는 것입니다."
               },
               {
                 icon: <Mail className="text-[#87af4b]" size={24} />,
-                title: "당신을 초대합니다",
-                content: "진정한 평안과 소망을 찾는 모든 분들을 이 귀한 자리에 초대합니다. 따뜻한 교제와 생명의 말씀이 준비되어 있습니다. 부담 없이 오셔서 함께 기쁨을 나누시길 바랍니다."
+                title: "🌿 당신을 초대합니다",
+                content: "저희는 물과 성령으로 거듭나는 이 놀라운 진리를 몸소 경험한 증인들입니다. 이번 집회는 여러분의 인생에서 가장 소중한 전환점이 될 것입니다. 마음의 문을 열고 들려오는 말씀에 귀를 기울여 보십시오. 당신도 거듭날 수 있습니다."
               }
             ].map((item, idx) => (
               <motion.div key={idx} variants={itemVariants} className="space-y-4">
@@ -145,14 +167,14 @@ export default function App() {
               
               <div className="flex items-center gap-3 mb-8">
                 <div className="h-px w-8 bg-[#87af4b]" />
-                <span className="text-[#87af4b] text-[10px] font-bold tracking-[0.3em] uppercase">Event Details</span>
+                <span className="text-[#87af4b] text-[10px] font-bold tracking-[0.3em] uppercase">집회 상세 정보</span>
               </div>
 
               <div className="space-y-8">
                 <div className="flex gap-4">
                   <Calendar className="text-[#87af4b] shrink-0" size={20} />
                   <div>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Date</p>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">날짜</p>
                     <p className="text-lg font-bold">2026년 3월 27일(금) ~ 29일(주일)</p>
                   </div>
                 </div>
@@ -160,7 +182,7 @@ export default function App() {
                 <div className="flex gap-4">
                   <Clock className="text-[#87af4b] shrink-0" size={20} />
                   <div>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Time</p>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">시간</p>
                     <p className="text-sm">금·토 저녁 8시</p>
                     <p className="text-sm">주일 오전 11시 40분</p>
                   </div>
@@ -169,7 +191,7 @@ export default function App() {
                 <div className="flex gap-4">
                   <User className="text-[#87af4b] shrink-0" size={20} />
                   <div>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Speaker</p>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">강사</p>
                     <p className="text-base font-bold">김종만 형제님</p>
                     <p className="text-xs text-slate-400 mt-1">남원서문교회 은퇴장로, 전 전주대학교 교수</p>
                   </div>
@@ -178,7 +200,7 @@ export default function App() {
                 <div className="flex gap-4">
                   <MapPin className="text-[#87af4b] shrink-0" size={20} />
                   <div className="flex-1">
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Location</p>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">장소</p>
                     <p className="text-base font-bold">대전 내동 교회 예배실</p>
                     <p className="text-xs text-slate-400 mt-1">대전광역시 서구 동서대로 1025번길 35 (내동)</p>
                     <a 
@@ -196,11 +218,40 @@ export default function App() {
                 <div className="flex gap-4">
                   <Phone className="text-[#87af4b] shrink-0" size={20} />
                   <div>
-                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">Contact</p>
+                    <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">문의</p>
                     <p className="text-base font-bold">010-6635-5593 (이현웅)</p>
                   </div>
                 </div>
               </div>
+            </div>
+          </motion.section>
+
+          {/* Regular Meetings Section */}
+          <motion.section 
+            id="meetings"
+            variants={itemVariants} 
+            className="px-6 py-12 bg-slate-50 rounded-3xl mx-4 space-y-8"
+          >
+            <div className="flex items-center gap-3">
+              <Info className="text-[#87af4b]" size={24} />
+              <h4 className="text-xl font-bold text-slate-900">집회안내</h4>
+            </div>
+            
+            <div className="grid gap-4">
+              {[
+                { name: "주일예배", time: "주일 10:30" },
+                { name: "주일설교", time: "주일 11:30" },
+                { name: "주일학교, 학생회", time: "주일 09:00" },
+                { name: "청년회", time: "주일 14:00" },
+                { name: "수요집회", time: "수요일 19:40" },
+                { name: "기도집회", time: "금요일 20:00" },
+                { name: "자매회", time: "화요일 10:30" }
+              ].map((meeting, idx) => (
+                <div key={idx} className="flex justify-between items-center p-4 bg-white rounded-2xl shadow-sm border border-slate-100">
+                  <span className="font-bold text-slate-700">{meeting.name}</span>
+                  <span className="text-sm text-[#87af4b] font-semibold">{meeting.time}</span>
+                </div>
+              ))}
             </div>
           </motion.section>
 
@@ -213,10 +264,10 @@ export default function App() {
 
         {/* Bottom Navigation */}
         <nav className="fixed bottom-0 left-0 right-0 max-w-md mx-auto bg-white/95 backdrop-blur-md border-t border-slate-100 px-6 pb-8 pt-3 flex justify-around items-center z-50">
-          <NavItem icon={<Home size={20} />} label="홈" active />
-          <NavItem icon={<Info size={20} />} label="집회안내" />
-          <NavItem icon={<MessageSquare size={20} />} label="문의" />
-          <NavItem icon={<Share2 size={20} />} label="공유" />
+          <NavItem icon={<Home size={20} />} label="홈" active onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} />
+          <NavItem icon={<Info size={20} />} label="집회안내" onClick={() => document.getElementById('meetings')?.scrollIntoView({ behavior: 'smooth' })} />
+          <NavItem icon={<MessageSquare size={20} />} label="문의" href="tel:01066355593" />
+          <NavItem icon={<Share2 size={20} />} label="공유" onClick={handleShare} />
         </nav>
 
         {/* Background Decoration */}
@@ -229,9 +280,20 @@ export default function App() {
   );
 }
 
-function NavItem({ icon, label, active = false }: { icon: ReactNode, label: string, active?: boolean }) {
+function NavItem({ icon, label, active = false, href, onClick }: { icon: ReactNode, label: string, active?: boolean, href?: string, onClick?: () => void }) {
+  const className = `flex flex-col items-center gap-1 transition-colors ${active ? 'text-[#87af4b]' : 'text-slate-400 hover:text-[#87af4b]'}`;
+  
+  if (href) {
+    return (
+      <a href={href} className={className}>
+        {icon}
+        <span className="text-[10px] font-bold tracking-tighter">{label}</span>
+      </a>
+    );
+  }
+
   return (
-    <button className={`flex flex-col items-center gap-1 transition-colors ${active ? 'text-[#87af4b]' : 'text-slate-400 hover:text-[#87af4b]'}`}>
+    <button className={className} onClick={onClick}>
       {icon}
       <span className="text-[10px] font-bold tracking-tighter">{label}</span>
     </button>
