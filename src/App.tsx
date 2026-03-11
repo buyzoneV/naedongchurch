@@ -202,7 +202,7 @@ export default function App() {
                   <div className="flex-1">
                     <p className="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">장소</p>
                     <p className="text-base font-bold">대전 내동 교회 예배실</p>
-                    <p className="text-xs text-slate-400 mt-1">대전광역시 서구 동서대로 1025번길 35 (내동)</p>
+                    <p className="text-xs text-slate-400 mt-1">대전광역시 서구 동서대로 1079번길 19 (내동)</p>
                     <a 
                       href="https://maps.app.goo.gl/UgjSXrXUkyn98DAU9" 
                       target="_blank" 
