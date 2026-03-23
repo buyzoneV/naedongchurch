@@ -1,5 +1,8 @@
 import { useState, useEffect, ReactNode } from 'react';
 import { motion } from 'motion/react';
+import ReactPlayer from 'react-player';
+
+const Player = ReactPlayer as any;
 import { 
   ArrowLeft, 
   Leaf, 
@@ -14,15 +17,47 @@ import {
   Info, 
   MessageSquare, 
   Share2,
+  Volume2,
+  VolumeX,
   Quote
 } from 'lucide-react';
 
+const BACKGROUND_MUSIC_URL = 'https://www.youtube.com/watch?v=UBY_yPITZrw';
+
 export default function App() {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true); // Conceptually "on"
+  const [isReady, setIsReady] = useState(false);
+  const [hasInteracted, setHasInteracted] = useState(false);
+  const [lastToggleTime, setLastToggleTime] = useState(0);
 
   useEffect(() => {
     setIsLoaded(true);
+
+    const handleFirstInteraction = () => {
+      setHasInteracted(true);
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+    };
+
+    window.addEventListener('click', handleFirstInteraction);
+    window.addEventListener('touchstart', handleFirstInteraction);
+
+    return () => {
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+    };
   }, []);
+
+  const toggleMusic = () => {
+    const now = Date.now();
+    if (now - lastToggleTime < 500) return; // Throttle 500ms
+    
+    if (!isReady && !isPlaying) return; 
+    
+    setIsPlaying(!isPlaying);
+    setLastToggleTime(now);
+  };
 
   const handleShare = async () => {
     if (navigator.share) {
@@ -71,8 +106,31 @@ export default function App() {
             <ArrowLeft size={24} />
           </button>
           <h2 className="text-lg font-bold tracking-tight font-serif">초청장</h2>
-          <div className="w-10"></div>
+          <button 
+            onClick={toggleMusic}
+            className="p-2 hover:bg-[#87af4b]/10 rounded-full transition-colors text-[#87af4b]"
+          >
+            {isPlaying ? <Volume2 size={24} /> : <VolumeX size={24} />}
+          </button>
         </header>
+
+        <div className="hidden">
+          <Player
+            url={BACKGROUND_MUSIC_URL}
+            playing={isPlaying && hasInteracted}
+            loop
+            volume={0.5}
+            width="0"
+            height="0"
+            onReady={() => setIsReady(true)}
+            onError={(e: any) => console.error("Music Player Error:", e)}
+            config={{
+              youtube: {
+                playerVars: { showinfo: 0, controls: 0, autoplay: 0 }
+              }
+            }}
+          />
+        </div>
 
         <motion.main 
           variants={containerVariants}
